@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Webhook Button</title>
+  <style>
+    :root { --accent: #6c63ff; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0f1117;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-family: system-ui, sans-serif;
+    }
+    input {
+      background: #1a1d27;
+      border: 1px solid #2e3147;
+      border-radius: 8px;
+      color: #e8e9f0;
+      font-size: 0.9rem;
+      padding: 10px 14px;
+      width: 260px;
+      outline: none;
+      text-align: center;
+    }
+    input:focus { border-color: var(--accent); }
+    button {
+      width: 260px;
+      padding: 13px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    button:hover { background: #574fd6; }
+    button:active { transform: scale(0.97); }
+    #status { font-size: 0.8rem; color: #8b8fa8; height: 16px; }
+  </style>
+</head>
+<body>
+  <input id="msg" type="text" placeholder="Message (default: urgent)" />
+  <button onclick="fire()">Fire Webhook</button>
+  <div id="status"></div>
+
+  <script>
+    const WEBHOOK_URL = 'https://discord.com/api/webhooks/1563997087249596517/CLOruXLWYTS8mpaYUxfsRM4uQM6vifivlZEQ1Fnst4hTBqqKE9W5J4u2K5ZrCgXO_yY-';
+
+    async function fire() {
+      const msg = document.getElementById('msg').value.trim() || 'urgent';
+      const status = document.getElementById('status');
+      status.textContent = 'Sending…';
+      try {
+        await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg })
+        });
+        status.textContent = '✅ Sent!';
+      } catch {
+        status.textContent = '❌ Failed';
+      }
+    }
+  </script>
+</body>
+</html>
