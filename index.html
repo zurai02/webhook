@@ -59,14 +59,18 @@
       const status = document.getElementById('status');
       status.textContent = 'Sending…';
       try {
-        await fetch(WEBHOOK_URL, {
+        const res = await fetch(WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: msg })
+          body: JSON.stringify({ content: msg })  // ← fixed: was "message"
         });
-        status.textContent = '✅ Sent!';
+        if (res.ok || res.status === 204) {
+          status.textContent = '✅ Sent!';
+        } else {
+          status.textContent = `❌ Error ${res.status}`;
+        }
       } catch {
-        status.textContent = '❌ Failed';
+        status.textContent = '❌ Failed (network error)';
       }
     }
   </script>
